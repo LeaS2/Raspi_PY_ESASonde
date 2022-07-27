@@ -61,7 +61,6 @@ Protokoll:
 ***
 * Soll-Feature: 
     * Autostart: Programm startet automatisch beim Anschalten des Raspi
-    * Log-Datei im Programm mitschreiben, die später die Analyse von Fehlern und das Debugging in der Testphase erleichtert 
     
 * Kann-Feature: 
     * Aufzeichnungsfrequenz auf Platine (SPS) via Raspi setzten können
