@@ -12,14 +12,13 @@ Der Code läuft auf einem Raspberry Pi 3 Model B vi 2. Der Ethernet Port des Ras
 ***
 Informationen zur erfolgreichen Installation auf dem Raspberry Pi: 
 ```
-$ git clone https://github.com/LeaS2/Raspi_ESASonde.git
+$ git clone https://github.com/LeaS2/Raspi_PY_ESASonde.git
 $ sudo apt update
 $ sudo apt upgrade
-```
-### Zusatzinformation:  
-Es ist notwendig die Pandas Library auf dem Raspi zu installieren, die zur Verarbeitung der CSV Dateien verwendet wird. 
-```
+$ sudo apt-get install rpi.gpio
 $ sudo apt-get install python-pandas
+```  
+Die Pandas Libraryzur Verarbeitung der CSV Dateien verwendet wird. Die RPI.GPIO Library ermöglicht die Ansteuerung der GPIO Ports.
 ```
 
 ## Spezifikation des verwendeten Protokolls für die Schnittstelle Sensorboard/Raspi
