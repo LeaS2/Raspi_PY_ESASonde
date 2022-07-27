@@ -1,10 +1,9 @@
 import threading
-import socket
 import datetime
 import pandas as pd
 import logging
 import RPi.GPIO as GPIO
-
+from time import sleep
 
 # Konstanten
 BUTTON_PORT = 16
@@ -31,9 +30,10 @@ def run(start):
             cleanUp(df)
             break
 
-    
-
-        
+        pseudoMessage = "Neue Zeile"
+        df = df.append(pseudoMessage)
+        sleep(10)                 
+      
 def handleButtonPressed():
 
     # Übersetzt Nutzereingabe
@@ -48,7 +48,6 @@ def cleanUp(df):
     filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
     logging.debug("cleanUp:    CSV Datei gespeichert.")
-
 
 
 if __name__ == '__main__':
@@ -67,6 +66,7 @@ if __name__ == '__main__':
     # GPIO Konfigurationen erstellen
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON_PORT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(19, GPIO.OUT)
     GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=100)
     logging.debug("Main:    GPIO Eingänge konfiguriert. Wartet auf Nutzereingabe.")
 
@@ -74,6 +74,9 @@ if __name__ == '__main__':
 
     while True:
         if readData and not t1.is_alive():
+            GPIO.output(19, GPIO.HIGH)
             t1.start()
             t1.join()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
+        elif not readData: 
+            GPIO.output(19, GPIO.LOW)
