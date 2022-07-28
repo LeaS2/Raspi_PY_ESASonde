@@ -24,12 +24,14 @@ def run():
     df = pd.DataFrame(columns=COLUMN_HEADER)
     logging.debug("run:    Data Frame erstellt.")
 
-    while True:                                             # Timer einfügen
+    i = 0
+    while i < 10:                                             # Timer einfügen
 
         # Einlesen der ersten beiden Bytes 
         checkBuf = udpSock.recv(1024)                   
+        df.loc[df.shape[0]] = (checkBuf.decode()).split(",")
         print(checkBuf.decode())
-
+        i += 1
         # Prüft Start-Sign und Senderadresse
         # if checkBuf == '$':
             
@@ -56,6 +58,7 @@ def run():
             #df.loc[df.shape[0]] = (data.decode()).split(",")
         #else: 
             #break 
+    cleanUp(df)
 
 
 def cleanUp(df):
