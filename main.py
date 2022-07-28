@@ -1,5 +1,3 @@
-from cmath import e
-from tabnanny import check
 import threading
 import socket
 import datetime
@@ -46,11 +44,11 @@ def run(start):
         # Prüft Start-Sign und Senderadresse
         if checkBuf[0] == '$':            
             data = udpSock.recv(ord(checkBuf[1]))
-            df = df.append(data.decode())                            
+            df = df.append((data.decode()).split(","), ignore_index=True)                            
         elif checkBuf[1] == '$':
             dataSize = udpSock.recv(1)
             data = udpSock.recv(ord(dataSize.decode()))
-            df = df.append(data.decode()) 
+            df = df.append((data.decode()).split(","), ignore_index=True) 
         else: 
             break 
 

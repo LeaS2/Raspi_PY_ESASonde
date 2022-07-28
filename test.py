@@ -1,5 +1,5 @@
 import threading
-import datetime
+from datetime import datetime
 import pandas as pd
 import logging
 import RPi.GPIO as GPIO
@@ -10,8 +10,7 @@ BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
-COLUMN_HEADER = ['Counter', 'Timestamp', 'Latency', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
-                 'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
+COLUMN_HEADER = ['Eins', 'Zwei', 'Drei', 'Vier']
 
 # Globale Variable 
 readData = False
@@ -30,8 +29,8 @@ def run(start):
             cleanUp(df)
             break
 
-        pseudoMessage = "Neue Zeile"
-        df = df.append(pseudoMessage)
+        pseudoMessage = ['Was', 'will', 'man', 'mehr']
+        df.loc[df.shape[0]] = pseudoMessage
         sleep(10)                 
       
 def handleButtonPressed():
