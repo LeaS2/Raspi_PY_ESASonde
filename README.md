@@ -16,10 +16,10 @@ $ git clone https://github.com/LeaS2/Raspi_PY_ESASonde.git
 $ sudo apt update
 $ sudo apt upgrade
 $ sudo apt-get install rpi.gpio
-$ sudo apt-get install python-pandas
+$ sudo apt-get install python3-pandas
 ```  
 Die Pandas Libraryzur Verarbeitung der CSV Dateien verwendet wird. Die RPI.GPIO Library ermöglicht die Ansteuerung der GPIO Ports.
-```
+
 
 ## Spezifikation des verwendeten Protokolls für die Schnittstelle Sensorboard/Raspi
 ***
