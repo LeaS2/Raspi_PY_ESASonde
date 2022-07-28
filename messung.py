@@ -36,14 +36,16 @@ def run(druck):
         if checkBuf == '$':
             
             size = ""
-
+            print('StartSign erkannt')
             while True:
                 temp = udpSock.recv(1)
                 temp = temp.decode()
                 if temp == ',':
+                    print('Komma erkannt')
                     break
 
                 size = size + temp
+                print('Noch kein Komma erkannt: %s', size)
             
             print(size)    
 
