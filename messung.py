@@ -13,7 +13,7 @@ COLUMN_HEADER = ['Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3
                  'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
 
 
-def run(druck):
+def run():
 
     # Socket etrstellen und binden
     udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
