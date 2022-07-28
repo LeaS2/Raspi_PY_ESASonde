@@ -46,6 +46,7 @@ def run(druck):
             print(size)    
 
             data = udpSock.recv(ord(size))
+            print(data)
             df.loc[df.shape[0]] = (data.decode()).split(",")                            
         #elif checkBuf[1] == '$':
             #dataSize = udpSock.recv(1)
