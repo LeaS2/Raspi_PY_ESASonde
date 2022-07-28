@@ -39,6 +39,7 @@ def run(druck):
 
             while True:
                 temp = udpSock.recv(1)
+                temp = temp.decode()
                 if temp == ',':
                     break
 
@@ -47,7 +48,7 @@ def run(druck):
             print(size)    
 
             data = udpSock.recv(ord(size))
-            print(data)
+            print(data.decode())
             df.loc[df.shape[0]] = (data.decode()).split(",")                            
         #elif checkBuf[1] == '$':
             #dataSize = udpSock.recv(1)
