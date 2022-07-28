@@ -27,31 +27,29 @@ def run(druck):
     while True:                                             # Timer einfügen
 
         # Einlesen der ersten beiden Bytes 
-        checkBuf = udpSock.recv(1) 
-        print(checkBuf)                   
-        checkBuf = checkBuf.decode()
-        print(checkBuf)
+        checkBuf = udpSock.recv(1024)                   
+        print(checkBuf.decode())
 
         # Prüft Start-Sign und Senderadresse
-        if checkBuf == '$':
+        # if checkBuf == '$':
             
-            size = ""
-            print('StartSign erkannt')
-            while True:
-                temp = udpSock.recv(1)
-                temp = temp.decode()
-                if temp == ',':
-                    print('Komma erkannt')
-                    break
+            #size = ""
+            #print('StartSign erkannt')
+            #while True:
+                #temp = udpSock.recv()
+                #temp = temp.decode()
+                #if temp == ',':
+                    #print('Komma erkannt')
+                    #break
 
-                size = size + temp
-                print('Noch kein Komma erkannt: %s', size)
+                #size = size + temp
+                #print('Noch kein Komma erkannt: %s', size)
             
-            print(size)    
+            #print(size)    
 
-            data = udpSock.recv(ord(size))
-            print(data.decode())
-            df.loc[df.shape[0]] = (data.decode()).split(",")                            
+            #data = udpSock.recv(ord(size))
+            #print(data.decode())
+            #df.loc[df.shape[0]] = (data.decode()).split(",")                            
         #elif checkBuf[1] == '$':
             #dataSize = udpSock.recv(1)
             #data = udpSock.recv(ord(dataSize.decode()))
