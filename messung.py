@@ -52,8 +52,8 @@ def run(druck):
             #dataSize = udpSock.recv(1)
             #data = udpSock.recv(ord(dataSize.decode()))
             #df.loc[df.shape[0]] = (data.decode()).split(",")
-        else: 
-            break 
+        #else: 
+            #break 
 
 
 def cleanUp(df):
