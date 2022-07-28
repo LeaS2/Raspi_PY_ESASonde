@@ -29,10 +29,11 @@ def run(druck):
         # Einlesen der ersten beiden Bytes 
         checkBuf = udpSock.recv(1) 
         print(checkBuf)                   
-        # checkBuf = checkBuf.decode()
+        checkBuf = checkBuf.decode()
+        print(checkBuf)
 
         # Prüft Start-Sign und Senderadresse
-        if checkBuf[0] == '$':
+        if checkBuf == '$':
             
             size = ""
 
