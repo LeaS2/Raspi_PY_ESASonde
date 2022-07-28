@@ -17,7 +17,7 @@ def run(druck):
 
     # Socket etrstellen und binden
     udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udpSock.bind((RASPI_IP, ETHERNET_PORT))
+    udpSock.bind(RASPI_IP, ETHERNET_PORT)
     logging.debug("run:    UDP Socket erstellt.")
 
     # Data Frame zum Speichern der Sensordaten
@@ -87,7 +87,7 @@ if __name__ == '__main__':
             print('Eingabe: %s', druck)
             bestaetigung = input("Korrekte Eingabe? j[ja] / n[nein]")
             if bestaetigung == 'j':
-                run(int(druck))
+                run()
             else: 
                 continue
         elif userInput == 'n':
