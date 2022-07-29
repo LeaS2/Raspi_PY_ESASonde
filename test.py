@@ -31,7 +31,7 @@ def run(start):
 
         pseudoMessage = ['Was', 'will', 'man', 'mehr']
         df.loc[df.shape[0]] = pseudoMessage
-        sleep(10)                 
+        sleep(1)                 
       
 def handleButtonPressed():
 
@@ -46,17 +46,11 @@ def cleanUp(df):
     now = datetime.now()
     filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
+    GPIO.cleanup()
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
 
 if __name__ == '__main__':
-
-    ''' To Do:  
-                - LCD Lib -> Bildschirmausgaben einfügen 
-                - GPIO Kofigurationen zurücksetzten?
-                - Read Data Funktion schreiben
-                - sleep einfügen in ReadData oder while True in Main?          
-    '''
 
     # Log-File erstellen
     logging.basicConfig(filename="log.txt", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
