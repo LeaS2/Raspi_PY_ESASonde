@@ -56,10 +56,10 @@ if __name__ == '__main__':
         userInput = input("Drücke: j [Messung starten] | n [Programm beenden] ")
         if userInput == 'j':
             druck = input("Anliegender Druck: ")
-            print('Eingabe: %s', druck)
+            print('Eingabe:' + druck)
             bestaetigung = input("Korrekte Eingabe? j[ja] / n[nein]")
             if bestaetigung == 'j':
-                run(int(druck))
+                run(druck)
             else: 
                 continue
         elif userInput == 'n':
