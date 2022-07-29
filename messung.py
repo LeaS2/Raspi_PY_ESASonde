@@ -26,7 +26,7 @@ def run(druck):
     logging.debug("run:    Data Frame erstellt.")
 
     t_end = time.time() + RUNTIME
-    while  time.time() <= t_end:                                            
+    while  time.time() < t_end:                                            
 
         # Einlesen der Datenpakete
         data = udpSock.recv(1024)                   
