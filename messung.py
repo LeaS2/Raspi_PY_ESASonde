@@ -2,6 +2,7 @@ import socket
 from datetime import datetime
 import pandas as pd
 import logging
+import time
 
 
 # Konstanten
@@ -9,11 +10,11 @@ BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
-COLUMN_HEADER = ['Size', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
+COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
                  'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
+RUNTIME = 10            # in Sekunden
 
-
-def run():
+def run(druck):
 
     # Socket etrstellen und binden
     udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,59 +25,27 @@ def run():
     df = pd.DataFrame(columns=COLUMN_HEADER)
     logging.debug("run:    Data Frame erstellt.")
 
-    i = 0
-    while i < 10:                                             # Timer einfügen
+    t_end = time.time() + RUNTIME
+    while  time.time() <= t_end:                                            
 
-        # Einlesen der ersten beiden Bytes 
-        checkBuf = udpSock.recv(1024)                   
-        df.loc[df.shape[0]] = (checkBuf.decode()).split(",")
-        print(checkBuf.decode())
-        i += 1
-        # Prüft Start-Sign und Senderadresse
-        # if checkBuf == '$':
-            
-            #size = ""
-            #print('StartSign erkannt')
-            #while True:
-                #temp = udpSock.recv()
-                #temp = temp.decode()
-                #if temp == ',':
-                    #print('Komma erkannt')
-                    #break
-
-                #size = size + temp
-                #print('Noch kein Komma erkannt: %s', size)
-            
-            #print(size)    
-
-            #data = udpSock.recv(ord(size))
-            #print(data.decode())
-            #df.loc[df.shape[0]] = (data.decode()).split(",")                            
-        #elif checkBuf[1] == '$':
-            #dataSize = udpSock.recv(1)
-            #data = udpSock.recv(ord(dataSize.decode()))
-            #df.loc[df.shape[0]] = (data.decode()).split(",")
-        #else: 
-            #break 
-    cleanUp(df)
+        # Einlesen der Datenpakete
+        data = udpSock.recv(1024)                   
+        df.loc[df.shape[0]] = (data.decode()).split(",")
+        print(data.decode())
+        
+    cleanUp(df, druck)
 
 
-def cleanUp(df):
+def cleanUp(df, druck):
     
     # Benennung und Speicherung des DataFrame als CSV Datei
     now = datetime.now()
-    filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
+    filename = druck + now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
 
 if __name__ == '__main__':
-
-    ''' To Do:  
-                - Verknüpfung mit pi-Top 
-                - Müssen GPIO Kofigurationen zurücksetzten werden? 
-                - sleep einfügen in ReadData oder while True in Main um Leistung zu sparen?          
-    '''
 
     # Log-File erstellen
     logging.basicConfig(filename="log.txt", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
@@ -90,7 +59,7 @@ if __name__ == '__main__':
             print('Eingabe: %s', druck)
             bestaetigung = input("Korrekte Eingabe? j[ja] / n[nein]")
             if bestaetigung == 'j':
-                run()
+                run(int(druck))
             else: 
                 continue
         elif userInput == 'n':
