@@ -1,6 +1,6 @@
 import threading
 import socket
-import datetime
+from datetime import datetime
 import pandas as pd
 import logging
 import RPi.GPIO as GPIO
@@ -11,7 +11,7 @@ BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
-COLUMN_HEADER = ['Counter', 'Timestamp', 'Latency', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
+COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
                  'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
 
 # Globale Variable 
@@ -37,22 +37,8 @@ def run(start):
             udpSock.close()
             break
 
-        # Einlesen der ersten beiden Bytes 
-        checkBuf = udpSock.recv(2)                    
-        checkBuf = checkBuf.decode()
-
-        # Prüft Start-Sign und Senderadresse
-        if checkBuf[0] == '$':            
-            data = udpSock.recv(ord(checkBuf[1]))
-            df = df.append((data.decode()).split(","), ignore_index=True)                            
-        elif checkBuf[1] == '$':
-            dataSize = udpSock.recv(1)
-            data = udpSock.recv(ord(dataSize.decode()))
-            df = df.append((data.decode()).split(","), ignore_index=True) 
-        else: 
-            break 
-
-
+        data = udpSock.recv(1024)                   
+        df.loc[df.shape[0]] = (data.decode()).split(",")
 
         
 def handleButtonPressed():
@@ -63,8 +49,6 @@ def handleButtonPressed():
     logging.debug("handleButtonPressed:    Nutzereingabe erkannt.")
 
 def cleanUp(df):
-
-    df.str.split(pat = ",", expand=True)
     
     # Benennung und Speicherung des DataFrame als CSV Datei
     now = datetime.now()
@@ -101,3 +85,4 @@ if __name__ == '__main__':
             t1.join()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
 
+    # GPIO.cleanup()
