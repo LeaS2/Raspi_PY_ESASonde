@@ -40,7 +40,7 @@ def cleanUp(df, druck):
     
     # Benennung und Speicherung des DataFrame als CSV Datei
     now = datetime.now()
-    filename = druck + now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
+    filename = druck + now.strftime("_%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
