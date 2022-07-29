@@ -14,7 +14,7 @@ COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2'
                  'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
 RUNTIME = 10            # in Sekunden
 
-def run(druck):
+def run(druck, sps):
 
     # Socket etrstellen und binden
     udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -33,14 +33,14 @@ def run(druck):
         df.loc[df.shape[0]] = (data.decode()).split(",")
         print(data.decode())
         
-    cleanUp(df, druck)
+    cleanUp(df, druck, sps)
 
 
 def cleanUp(df, druck):
     
     # Benennung und Speicherung des DataFrame als CSV Datei
     now = datetime.now()
-    filename = druck + now.strftime("_%Y-%m-%d_%H:%M_") + "Sensordata.csv"
+    filename = druck + '_' + sps + now.strftime("_%Y-%m-%d_%H:%M") + ".csv"
     df.to_csv(filename, index=False)
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
@@ -56,10 +56,11 @@ if __name__ == '__main__':
         userInput = input("Drücke: j [Messung starten] | n [Programm beenden] ")
         if userInput == 'j':
             druck = input("Anliegender Druck: ")
-            print('Eingabe:' + druck)
+            sps = input("Eingestellte SPS: ")
+            print('Eingabe:' + druck + ' - ' + sps)
             bestaetigung = input("Korrekte Eingabe? j[ja] / n[nein]")
             if bestaetigung == 'j':
-                run(druck)
+                run(druck, sps)
             else: 
                 continue
         elif userInput == 'n':
