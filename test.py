@@ -20,6 +20,7 @@ def run(start):
 
     # Data Frame zum Speichern der Sensordaten
     df = pd.DataFrame(columns=COLUMN_HEADER)
+    print('DataFrame - Messung läuft')
     logging.debug("run:    Data Frame erstellt.")
 
     while True:
@@ -36,8 +37,10 @@ def run(start):
 def handleButtonPressed():
 
     # Übersetzt Nutzereingabe
+    print('read Data aufgerufen')
     global readData
     readData = not readData
+    print('read Data geändert: ' + readData)
     logging.debug("handleButtonPressed:    Nutzereingabe erkannt.")
 
 def cleanUp(df):
@@ -47,6 +50,7 @@ def cleanUp(df):
     filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
     GPIO.cleanup()
+    print('CleanUp aufgerufen')
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
 
@@ -64,12 +68,15 @@ if __name__ == '__main__':
     logging.debug("Main:    GPIO Eingänge konfiguriert. Wartet auf Nutzereingabe.")
 
     t1 = threading.Thread(target=run, args=(lambda: readData,))
-
+    print('Programm läuft')
+    if not t1.is_alive():
+        print('Thread ist not alive')
+    
     while True:
         if readData and not t1.is_alive():
             GPIO.output(19, GPIO.HIGH)
             t1.start()
             t1.join()
+            print('Messung gestartet')
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
-        elif not readData: 
-            GPIO.output(19, GPIO.LOW)
+
