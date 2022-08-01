@@ -36,7 +36,7 @@ def run(druck, sps):
     cleanUp(df, druck, sps)
 
 
-def cleanUp(df, druck):
+def cleanUp(df, druck, sps):
     
     # Benennung und Speicherung des DataFrame als CSV Datei
     now = datetime.now()
