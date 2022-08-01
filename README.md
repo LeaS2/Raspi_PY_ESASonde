@@ -1,6 +1,6 @@
 # Speicherung serieller Daten auf einem Raspberry Pi 3
 ***
-Eingehende Sensordaten (Differenzdrücke mbar, Temperatur in °C) werden über eine Ethernetschnittstelle an Raspi gesendet
+Eingehende Sensordaten (Differenzdrücke Pascal = (mbar * 100), Temperatur in (°C * 100)) werden über eine Ethernetschnittstelle an Raspi gesendet
 und dort in Form von CSV Dateien gespeichert. 
 
 ## Generelle Informationen
@@ -31,7 +31,8 @@ Datenformat:
 * Alle versendeten Daten (Drücke, Temperatur) werden danach hintereinander, getrennt durch Komma (!kein Semikolon!) in den String geschrieben
 
 Datenpaket:
-* $ 'Stringgröße', 'Counter', 'Timestamp', 'Latency', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6', 'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7'
+* $ 'Stringgröße', 'Counter', 'Timestamp', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6', 'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7'
+* Zu beachten gilt, dass Druck und Temperatur mit dem Faktor 100 multipliziert sind, um keine Float Formate übertragen zu müssen. 
 
 Protokoll: 
 * Übertragungsprotokoll ist UDP basiert
