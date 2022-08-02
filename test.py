@@ -59,19 +59,22 @@ if __name__ == '__main__':
     # GPIO Konfigurationen erstellen
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON_PORT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(19, GPIO.OUT)
-    GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=2000)
+    GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=200)
 
     print('Programm läuft')
-    
-    while True:
-        if readData:
-            t1 = threading.Thread(target=run, args=(lambda: readData,))
-            print('Thread erstellt')
-            GPIO.output(19, GPIO.HIGH)
-            t1.start()
-            t1.join()
-            GPIO.output(19, GPIO.LOW)
-            print('Thread schließt')
+
+    try: 
+        while True:
+            if readData:
+                t1 = threading.Thread(target=run, args=(lambda: readData,))
+                print('Thread erstellt')
+                GPIO.output(19, GPIO.HIGH)
+                t1.start()
+                t1.join()
+                GPIO.output(19, GPIO.LOW)
+                print('Thread schließt')
+
+    except KeyboardInterrupt: 
+        GPIO.cleanup()
 
 
