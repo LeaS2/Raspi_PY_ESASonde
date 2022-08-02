@@ -7,7 +7,7 @@ from time import sleep
 
 # Konstanten
 BUTTON_PORT = 16
-LED = 19
+LED = 26
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
