@@ -65,7 +65,7 @@ if __name__ == '__main__':
     print('Programm läuft')
     
     while True:
-        if readData and not t1.is_alive():
+        if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,))
             print('Thread erstellt')
             GPIO.output(19, GPIO.HIGH)
