@@ -68,13 +68,12 @@ if __name__ == '__main__':
             if readData:
                 t1 = threading.Thread(target=run, args=(lambda: readData,))
                 print('Thread erstellt')
-                GPIO.output(19, GPIO.HIGH)
                 t1.start()
                 t1.join()
-                GPIO.output(19, GPIO.LOW)
                 print('Thread schließt')
 
     except KeyboardInterrupt: 
         GPIO.cleanup()
+        print('Alles Clean!')
 
 
