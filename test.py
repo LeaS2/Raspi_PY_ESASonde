@@ -39,7 +39,7 @@ def handleButtonPressed(BUTTON_PORT):
     print('read Data aufgerufen')
     global readData
     readData = not readData
-    print('read Data geändert: ' + readData)
+    print('read Data geändert: %b', readData)
 
 def cleanUp(df):
 
