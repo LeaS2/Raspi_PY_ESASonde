@@ -7,6 +7,7 @@ from time import sleep
 
 # Konstanten
 BUTTON_PORT = 16
+LED = 19
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
@@ -57,8 +58,11 @@ if __name__ == '__main__':
     # logging.info("Main:     Programm gestartet.")
 
     # GPIO Konfigurationen erstellen
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON_PORT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(LED, GPIO.OUT)
+    GPIO.output(LED, GPIO.LOW)
     GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=200)
 
     print('Programm läuft')
@@ -68,6 +72,7 @@ if __name__ == '__main__':
             if readData:
                 t1 = threading.Thread(target=run, args=(lambda: readData,))
                 print('Thread erstellt')
+                GPIO.output(LED, GPIO.HIGH)
                 t1.start()
                 t1.join()
                 print('Thread schließt')
