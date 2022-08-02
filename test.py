@@ -21,7 +21,6 @@ def run(start):
     # Data Frame zum Speichern der Sensordaten
     df = pd.DataFrame(columns=COLUMN_HEADER)
     print('DataFrame - Messung läuft')
-    logging.debug("run:    Data Frame erstellt.")
 
     while True:
 
@@ -34,14 +33,13 @@ def run(start):
         df.loc[df.shape[0]] = pseudoMessage
         sleep(1)                 
       
-def handleButtonPressed():
+def handleButtonPressed(BUTTON_PORT):
 
     # Übersetzt Nutzereingabe
     print('read Data aufgerufen')
     global readData
     readData = not readData
     print('read Data geändert: ' + readData)
-    logging.debug("handleButtonPressed:    Nutzereingabe erkannt.")
 
 def cleanUp(df):
 
@@ -51,32 +49,29 @@ def cleanUp(df):
     df.to_csv(filename, index=False)
     GPIO.cleanup()
     print('CleanUp aufgerufen')
-    logging.debug("cleanUp:    CSV Datei gespeichert.")
-
 
 if __name__ == '__main__':
 
     # Log-File erstellen
-    logging.basicConfig(filename="log.txt", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
-    logging.info("Main:     Programm gestartet.")
+    # logging.basicConfig(filename="log.txt", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
+    # logging.info("Main:     Programm gestartet.")
 
     # GPIO Konfigurationen erstellen
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(BUTTON_PORT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(19, GPIO.OUT)
-    GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=100)
-    logging.debug("Main:    GPIO Eingänge konfiguriert. Wartet auf Nutzereingabe.")
+    GPIO.add_event_detect(BUTTON_PORT, GPIO.FALLING, callback=handleButtonPressed, bouncetime=2000)
 
-    t1 = threading.Thread(target=run, args=(lambda: readData,))
     print('Programm läuft')
-    if not t1.is_alive():
-        print('Thread ist not alive')
     
     while True:
         if readData and not t1.is_alive():
+            t1 = threading.Thread(target=run, args=(lambda: readData,))
+            print('Thread erstellt')
             GPIO.output(19, GPIO.HIGH)
             t1.start()
             t1.join()
-            print('Messung gestartet')
-            logging.debug("Main:    Thread gestartet. Messung sollte starten.")
+            GPIO.output(19, GPIO.LOW)
+            print('Thread schließt')
+
 
