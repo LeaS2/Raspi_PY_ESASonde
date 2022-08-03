@@ -78,18 +78,19 @@ if __name__ == '__main__':
 
     while not stop.is_pressed:
         
-        miniscreen.display_multiline_text("Programm: O:Starten   X:Beenden")
+        miniscreen.display_multiline_text("Programm: O: Starten   X: Beenden")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
             sleep(2)
-            miniscreen.display_multiline_text("O:Messung beenden.")
+            miniscreen.display_multiline_text("O: Messung beenden.")
             t1.start()
             logging.info("Main:    Thread gestartet. Messung sollte starten.")
             t1.join()
             logging.info("Main:    Thread beendet. Messung sollte gespeichert sein.")
-            miniscreen.display_multiline_text("Akkustand:" + battery.capacity)
+            miniscreen.display_multiline_text("Akkustand: " + str(battery.capacity) + '%' )
+            sleep(2)
         
 
     
