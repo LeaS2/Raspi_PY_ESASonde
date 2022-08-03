@@ -3,7 +3,7 @@ import socket
 from datetime import datetime
 import pandas as pd
 import logging
-
+from time import sleep
 from pitop import Pitop
 
 
@@ -45,13 +45,9 @@ def run(start):
 # Übersetzt Nutzereingabe
 def handleStartButton():
     global readData
-    readData = True
+    readData = not readData
     logging.debug("handleStartButton:    True.")
 
-def handleStopButton():
-    global readData
-    readData = False
-    logging.debug("handleStopButton:    False.")
 
 def cleanUp(df):
     
@@ -59,16 +55,12 @@ def cleanUp(df):
     now = datetime.now()
     filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
+    miniscreen.display_multiline_text("Daten wurden erfolgreich gespeichert.")
     logging.debug("cleanUp:    CSV Datei gespeichert.")
-
+    sleep(2)
 
 
 if __name__ == '__main__':
-
-    ''' To Do:  
-                - Verknüpfung mit pi-Top 
-                - sleep einfügen in ReadData oder while True in Main um Leistung zu sparen?          
-    '''
 
     # Log-File erstellen
     logging.basicConfig(filename="log.txt", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
@@ -79,14 +71,20 @@ if __name__ == '__main__':
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
     start.when_released = handleStartButton
-    stop.when_released = handleStopButton
 
-    while True:
+    miniscreen.display_multiline_text("Programm läuft: Drücke Kreis, um die Messung zu starten!")
 
-        t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
-
-        if readData and not t1.is_alive():
+    while not stop:
+        
+        if readData:
+            t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
+            miniscreen.display_multiline_text("Messung läuft.")
+            sleep(0.5)
+            miniscreen.display_multiline_text("Drücke erneut Kreis, um die Messung zu beenden.")
             t1.start()
-            t1.join()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
+            t1.join()
+            ("Main:    Thread beendet. Messung sollte gespeichert sein.")
+    
+    miniscreen.display_multiline_text("Programm beendet. Tschau! :)")
 
