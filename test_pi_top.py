@@ -69,17 +69,18 @@ if __name__ == '__main__':
 
     while not stop.is_pressed:
         
-        miniscreen.display_multiline_text("Drücke Kreis, um die Messung zu starten!")
+        miniscreen.display_multiline_text("O -> Messung starten     X -> Programm beenden")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
-            sleep(1)
-            miniscreen.display_multiline_text("Drücke erneut Kreis, um die Messung zu beenden!")
+            sleep(2)
+            miniscreen.display_multiline_text("O -> Messung starten     X -> Programm beenden")
             t1.start()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
             t1.join()
             logging.debug("Main:    Thread beendet. Messung sollte gespeichert sein.")
     
     miniscreen.display_multiline_text("Programm beendet.")
+    
 
