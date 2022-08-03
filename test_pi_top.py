@@ -63,6 +63,8 @@ if __name__ == '__main__':
     miniscreen = pitop.miniscreen
     miniscreen.display_image_file("/home/pi/Raspi_PY_ESASonde/segelflugzeug_icon.png")
     sleep(2)
+    miniscreen.display_image_file("/home/pi/Raspi_PY_ESASonde/Segelflieger.png")
+    sleep(2)
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
     start.when_released = handleStartButton
