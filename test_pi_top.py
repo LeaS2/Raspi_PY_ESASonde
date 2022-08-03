@@ -7,7 +7,6 @@ from time import sleep
 from pitop import Pitop
 from PIL import Image, ImageDraw
 
-
 # Konstanten
 BUTTON_PORT = 16
 ETHERNET_PORT = 7
@@ -23,7 +22,6 @@ def run(start):
 
     # Data Frame zum Speichern der Sensordaten
     df = pd.DataFrame(columns=COLUMN_HEADER)
-    print('DataFrame - Messung läuft')
 
     while True:
 
@@ -71,13 +69,13 @@ if __name__ == '__main__':
 
     while not stop.is_pressed:
         
-        miniscreen.display_multiline_text("Programm läuft: Drücke Kreis, um die Messung zu starten!")
+        miniscreen.display_multiline_text("Drücke Kreis, um die Messung zu starten!")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
             sleep(1)
-            miniscreen.display_multiline_text("Drücke erneut Kreis, um die Messung zu beenden.")
+            miniscreen.display_multiline_text("Drücke erneut Kreis, um die Messung zu beenden!")
             t1.start()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
             t1.join()
