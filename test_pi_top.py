@@ -5,7 +5,6 @@ import pandas as pd
 import logging
 from time import sleep
 from pitop import Pitop
-from PIL import Image, ImageDraw
 
 # Konstanten
 BUTTON_PORT = 16
@@ -55,21 +54,22 @@ def cleanUp(df):
 
 if __name__ == '__main__':
 
-    # Log-File erstellen
-    logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    logging.info("Main:     Programm gestartet.")
-
     pitop = Pitop()
     miniscreen = pitop.miniscreen
     miniscreen.display_image_file("/home/pi/Raspi_PY_ESASonde/segelflugzeug_icon.png")
-    sleep(2)
+    sleep(1)
+
+    # Log-File erstellen
+    logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    logging.info("Main:     Programm gestartet.")
+    
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
     start.when_released = handleStartButton
 
     while not stop.is_pressed:
         
-        miniscreen.display_multiline_text("O: Messung starten.")
+        miniscreen.display_multiline_text("O: Messung starten X: Pogramm beenden")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
