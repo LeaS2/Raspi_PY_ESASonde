@@ -13,8 +13,7 @@ BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
-COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
-                 'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
+COLUMN_HEADER = ['Eins', 'Zwei', 'Drei', 'Vier']
 
 # Globale Variable 
 readData = False
@@ -72,6 +71,7 @@ if __name__ == '__main__':
     while not stop:
         
         miniscreen.display_multiline_text("Programm läuft: Drücke Kreis, um die Messung zu starten!")
+
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
