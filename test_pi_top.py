@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     while not stop.is_pressed:
         
-        miniscreen.display_multiline_text("O: Messung starten X: Pogramm beenden")
+        miniscreen.display_multiline_text("Programm: O:Starten   X:Beenden")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
