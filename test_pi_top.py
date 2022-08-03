@@ -63,24 +63,25 @@ if __name__ == '__main__':
 
     pitop = Pitop()
     miniscreen = pitop.miniscreen
-    image = Image.open("segelflugzeug_icon.png")
+    miniscreen.display_image_file("/home/pi/Raspi_PY_ESASonde/segelflugzeug_icon.png")
+    sleep(2)
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
     start.when_released = handleStartButton
 
-    while not stop:
+    while not stop.is_pressed:
         
         miniscreen.display_multiline_text("Programm läuft: Drücke Kreis, um die Messung zu starten!")
 
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
-            sleep(0.5)
+            sleep(1)
             miniscreen.display_multiline_text("Drücke erneut Kreis, um die Messung zu beenden.")
             t1.start()
             logging.debug("Main:    Thread gestartet. Messung sollte starten.")
             t1.join()
-            ("Main:    Thread beendet. Messung sollte gespeichert sein.")
+            logging.debug("Main:    Thread beendet. Messung sollte gespeichert sein.")
     
-    miniscreen.display_multiline_text("Programm beendet. Tschau! :)")
+    miniscreen.display_multiline_text("Programm beendet.")
 
