@@ -43,9 +43,15 @@ def handleStartButton():
 # Daten sichern sobald Batteriezustand kritisch
 def handleLowBattery():
     global readData
-    if readData: 
-        readData = False
+    
+    while True: 
+        if battery.capacity <= 29:
+            if readData: 
+                readData = False
+                break
     logging.info("handleLowBattery:    Set ReadData False.")
+    miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
+    sleep(2)
 
 
 def cleanUp(df):
@@ -72,8 +78,9 @@ if __name__ == '__main__':
     
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
-    battery = Pitop().battery
-    battery.when_critical = handleLowBattery
+
+    battery = pitop.battery
+    batteryThread = threading.Thread(target=handleLowBattery)
     start.when_released = handleStartButton
 
     while not stop.is_pressed:
