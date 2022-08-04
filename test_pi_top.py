@@ -7,7 +7,6 @@ from time import sleep
 from pitop import Pitop
 
 # Konstanten
-BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
@@ -45,13 +44,14 @@ def handleLowBattery():
     global readData
     
     while True: 
-        if battery.capacity <= 29:
+        if battery.capacity <= 10:
             if readData: 
                 readData = False
                 break
     logging.info("handleLowBattery:    Set ReadData False.")
     miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
     sleep(2)
+    stop.is_pressed == True
 
 
 def cleanUp(df):
@@ -76,12 +76,17 @@ if __name__ == '__main__':
     logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     logging.info("Main:     Programm gestartet.")
     
+    # Initialisierung von Stop/Start Button
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
+    start.when_released = handleStartButton
 
+    # Startet Battery Handling
     battery = pitop.battery
     batteryThread = threading.Thread(target=handleLowBattery)
-    start.when_released = handleStartButton
+    batteryThread.setDaemon(True)
+    batteryThread.start()
+    logging.info("Main:     Battery Daemon Thread gestartet.")
 
     while not stop.is_pressed:
         
@@ -102,5 +107,7 @@ if __name__ == '__main__':
 
     
     miniscreen.display_multiline_text("Programm beendet.")
+    sleep(5)
+    exit
     
 
