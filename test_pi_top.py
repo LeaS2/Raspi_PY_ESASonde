@@ -1,5 +1,5 @@
 import threading
-import socket
+import sys
 from datetime import datetime
 import pandas as pd
 import logging
@@ -44,14 +44,14 @@ def handleLowBattery():
     global readData
     
     while True: 
-        if battery.capacity <= 10:
+        if battery.capacity == 10:
             if readData: 
                 readData = False
                 break
     logging.info("handleLowBattery:    Set ReadData False.")
     miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
-    sleep(2)
-    stop.is_pressed == True
+    sleep(5)
+    sys.exit()
 
 
 def cleanUp(df):
@@ -102,12 +102,12 @@ if __name__ == '__main__':
             t1.join()
             logging.info("Main:    Thread beendet. Messung sollte gespeichert sein.")
             miniscreen.display_multiline_text("Akkustand: " + str(battery.capacity) + '%' )
-            sleep(2)
+            sleep(5)
         
 
     
     miniscreen.display_multiline_text("Programm beendet.")
     sleep(5)
-    exit
+    sys.exit()
     
 
