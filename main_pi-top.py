@@ -8,7 +8,6 @@ from pitop import Pitop
 
 
 # Konstanten
-BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
@@ -17,7 +16,6 @@ COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2'
 
 # Globale Variable 
 readData = False
-
 
 def run(start):
 
@@ -80,10 +78,10 @@ if __name__ == '__main__':
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
     battery = Pitop().battery
-    battery.when_critical = handleLowBattery
+    battery.when_critical = handleLowBattery            # Text ausgeben / Code beenden
     start.when_released = handleStartButton
 
-    miniscreen.display_multiline_text("Programm: O:Starten   X:Beenden")
+    miniscreen.display_multiline_text("Programm: O:Starten X:Beenden")
 
     while not stop.is_pressed:
         
