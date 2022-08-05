@@ -1,6 +1,7 @@
 import threading
 import sys
 from datetime import datetime
+from nbformat import read
 import pandas as pd
 import logging
 from time import sleep
@@ -44,15 +45,14 @@ def handleLowBattery():
     global readData
     
     while True: 
-        if battery.capacity == 10:
-            if readData: 
-                readData = False
-                break
+        if battery.capacity == 99 and readData:
+            readData = False
+            sleep(5)
+            break
     logging.info("handleLowBattery:    Set ReadData False.")
     miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
     sleep(5)
-    sys.exit()
-
+    
 
 def cleanUp(df):
     
@@ -84,7 +84,6 @@ if __name__ == '__main__':
     # Startet Battery Handling
     battery = pitop.battery
     batteryThread = threading.Thread(target=handleLowBattery)
-    batteryThread.setDaemon(True)
     batteryThread.start()
     logging.info("Main:     Battery Daemon Thread gestartet.")
 
@@ -104,7 +103,6 @@ if __name__ == '__main__':
             miniscreen.display_multiline_text("Akkustand: " + str(battery.capacity) + '%' )
             sleep(5)
         
-
     
     miniscreen.display_multiline_text("Programm beendet.")
     sleep(5)
