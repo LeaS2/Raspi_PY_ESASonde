@@ -1,7 +1,6 @@
 import threading
 import sys
 from datetime import datetime
-from nbformat import read
 import pandas as pd
 import logging
 from time import sleep
