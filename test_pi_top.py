@@ -44,10 +44,10 @@ def handleLowBattery():
     global readData
     
     while True: 
-        if battery.capacity == 97 and readData:
-            miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
-            readData = False
+        if battery.capacity == 10 and readData:
+            miniscreen.display_multiline_text("Messung wird wegen niedrigem Akkustand beendet.")
             sleep(5)
+            readData = False
             break
     logging.info("handleLowBattery:    Set ReadData False.")
     stop.is_pressed = True
@@ -104,7 +104,7 @@ if __name__ == '__main__':
             sleep(5)
         
     
-    miniscreen.display_multiline_text("Programm beendet.")
+    miniscreen.display_multiline_text("Programm erfolgreich beendet.")
     sleep(5)
     sys.exit()
     
