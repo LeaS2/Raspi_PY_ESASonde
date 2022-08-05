@@ -1,8 +1,10 @@
+import sys
 import threading
 import socket
-from datetime import datetime
-import pandas as pd
+import sys
 import logging
+import pandas as pd
+from datetime import datetime
 from time import sleep
 from pitop import Pitop
 
@@ -34,6 +36,7 @@ def run(start):
         if not start():
             cleanUp(df)
             udpSock.close()
+            logging.info("run:    UDP Socket geschlossen.")
             break
 
         data = udpSock.recv(1024)                   
@@ -46,12 +49,20 @@ def handleStartButton():
     readData = not readData
     logging.info("handleStartButton:    True.")
 
-# Daten sichern sobald Batteriezustand kritisch
+
+# Daten sichern sobald Batteriezustand kritisch (10%)
 def handleLowBattery():
     global readData
-    if readData: 
-        readData = False
+    
+    while True: 
+        if battery.capacity == 10 and readData:
+            miniscreen.display_multiline_text("Messung wird wegen niedrigem Akkustand beendet.")
+            sleep(5)
+            readData = False
+            break
     logging.info("handleLowBattery:    Set ReadData False.")
+    stop.is_pressed = True
+
 
 # Benennung und Speicherung des DataFrame als CSV Datei
 def cleanUp(df):
@@ -59,9 +70,9 @@ def cleanUp(df):
     now = datetime.now()
     filename = now.strftime("%Y-%m-%d_%H:%M_") + "Sensordata.csv"
     df.to_csv(filename, index=False)
-    miniscreen.display_multiline_text("Daten wurden erfolgreich gespeichert.")
     logging.info("cleanUp:    CSV Datei gespeichert.")
-    sleep(2)
+    miniscreen.display_multiline_text("Daten wurden erfolgreich gespeichert.")
+    sleep(5)
 
 
 if __name__ == '__main__':
@@ -69,6 +80,7 @@ if __name__ == '__main__':
     pitop = Pitop()
     miniscreen = pitop.miniscreen
     miniscreen.display_image_file("/home/pi/Raspi_PY_ESASonde/segelflugzeug_icon.png")
+    sleep(5)
 
     # Log-File erstellen
     logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -77,25 +89,31 @@ if __name__ == '__main__':
     # Button-Funktionen initialisieren
     start = miniscreen.select_button
     stop = miniscreen.cancel_button
-    battery = Pitop().battery
-    battery.when_critical = handleLowBattery            # Text ausgeben / Code beenden
     start.when_released = handleStartButton
 
-    miniscreen.display_multiline_text("Programm: O:Starten X:Beenden")
+    # Startet Battery Handling
+    battery = pitop.battery
+    batteryThread = threading.Thread(target=handleLowBattery)
+    batteryThread.start()
+    logging.info("Main:     Battery Daemon Thread gestartet.")
 
     while not stop.is_pressed:
+
+        miniscreen.display_multiline_text("Programm:  O:Starten X:Beenden")
         
         if readData:
-            t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
+            t1 = threading.Thread(target=run, args=(lambda: readData,)) 
             miniscreen.display_multiline_text("Messung läuft.")
-            sleep(0.5)
-            miniscreen.display_multiline_text("O:Messung beenden.")
+            sleep(5)
+            miniscreen.display_multiline_text("O:Messung beenden")
             t1.start()
             logging.info("Main:    Thread gestartet. Messung sollte starten.")
             t1.join()
             logging.info("Main:    Thread beendet. Messung sollte gespeichert sein.")
             miniscreen.display_multiline_text("Akkustand: " + str(battery.capacity) + '%' )
-            sleep(2)
+            sleep(5)
     
     miniscreen.display_multiline_text("Programm beendet.")
+    sleep(5)
+    sys.exit()
 
