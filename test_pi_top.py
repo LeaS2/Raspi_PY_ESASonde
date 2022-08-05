@@ -44,13 +44,14 @@ def handleLowBattery():
     global readData
     
     while True: 
-        if battery.capacity == 99 and readData:
+        if battery.capacity == 97 and readData:
+            miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
             readData = False
             sleep(5)
             break
     logging.info("handleLowBattery:    Set ReadData False.")
-    miniscreen.display_multiline_text("Messung wegen niedrigem Akkustand beendet.")
-    sleep(5)
+    stop.is_pressed = True
+    
     
 
 def cleanUp(df):
@@ -61,7 +62,7 @@ def cleanUp(df):
     df.to_csv(filename, index=False)
     miniscreen.display_multiline_text("Daten wurden erfolgreich gespeichert.")
     logging.info("cleanUp:    CSV Datei gespeichert.")
-    sleep(2)
+    sleep(5)
 
 
 if __name__ == '__main__':
@@ -93,7 +94,7 @@ if __name__ == '__main__':
         if readData:
             t1 = threading.Thread(target=run, args=(lambda: readData,)) # need to create new Thread -> evtl. eigene Funktion
             miniscreen.display_multiline_text("Messung läuft.")
-            sleep(2)
+            sleep(5)
             miniscreen.display_multiline_text("O:Messung beenden.")
             t1.start()
             logging.info("Main:    Thread gestartet. Messung sollte starten.")
