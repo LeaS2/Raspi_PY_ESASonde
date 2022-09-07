@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 import logging
 import time
+import numpy as np
 
 
 # Konstanten
@@ -25,20 +26,27 @@ def run(druck, sps):
     df = pd.DataFrame(columns=COLUMN_HEADER)
     logging.debug("run:    Data Frame erstellt.")
 
+    data_matrix = []
     t_end = time.time() + RUNTIME
     while  time.time() < t_end:                                            
 
         # Einlesen der Datenpakete
         data = udpSock.recv(100)                   
-        df.loc[df.shape[0]] = (data.decode()).split(",")
-        print(data.decode())
-        
-    cleanUp(df, druck, sps)
+        data_matrix = data_matrix.append(data)
+        #print(data.decode())
+
+    print(data_matrix) 
+
+
+    # cleanUp(df, druck, sps)
 
 
 def cleanUp(df, druck, sps):
     
     # Benennung und Speicherung des DataFrame als CSV Datei
+
+    df.loc[df.shape[0]] = (data.decode()).split(",")
+
     now = datetime.now()
     filename = sps + '_' + druck + now.strftime("_%Y-%m-%d_%H:%M") + ".csv"
     df.to_csv(filename, index=False)
