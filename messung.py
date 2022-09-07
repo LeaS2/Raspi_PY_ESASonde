@@ -29,7 +29,7 @@ def run(druck, sps):
     while  time.time() < t_end:                                            
 
         # Einlesen der Datenpakete
-        data = udpSock.recv(1024)                   
+        data = udpSock.recv(100)                   
         df.loc[df.shape[0]] = (data.decode()).split(",")
         print(data.decode())
         
