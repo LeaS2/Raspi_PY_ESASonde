@@ -13,7 +13,7 @@ RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
 COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5', 'Pressure 6',
                  'Pressure 7', 'Temperature 1', 'Temperature 2', 'Temperature 3', 'Temperature 4', 'Temperature 5', 'Temperature 6', 'Temperature 7']
-RUNTIME = 10            # in Sekunden
+RUNTIME = 2            # in Sekunden
 
 def run(druck, sps):
 
@@ -22,11 +22,8 @@ def run(druck, sps):
     udpSock.bind((RASPI_IP, ETHERNET_PORT))
     logging.debug("run:    UDP Socket erstellt.")
 
-    # Data Frame zum Speichern der Sensordaten
-    df = pd.DataFrame(columns=COLUMN_HEADER)
-    logging.debug("run:    Data Frame erstellt.")
-
     data_matrix = []
+    print(type(data_matrix))
     t_end = time.time() + RUNTIME
     while  time.time() < t_end:                                            
 
@@ -34,18 +31,21 @@ def run(druck, sps):
         data = udpSock.recv(100)                   
         data_matrix = data_matrix.append(data)
         #print(data.decode())
-
-    print(data_matrix) 
-
-
-    # cleanUp(df, druck, sps)
+ 
+    
+    # cleanUp(data_matrix, druck, sps)
 
 
-def cleanUp(df, druck, sps):
+def cleanUp(data, druck, sps):
+
+    # Data Frame zum Speichern der Sensordaten
+    df = pd.DataFrame(columns=COLUMN_HEADER)
+    logging.debug("run:    Data Frame erstellt.")
     
     # Benennung und Speicherung des DataFrame als CSV Datei
+    for i in data:
 
-    df.loc[df.shape[0]] = (data.decode()).split(",")
+        df.loc[df.shape[0]] = (data[i].decode()).split(",")
 
     now = datetime.now()
     filename = sps + '_' + druck + now.strftime("_%Y-%m-%d_%H:%M") + ".csv"
