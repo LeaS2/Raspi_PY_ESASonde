@@ -43,8 +43,7 @@ def cleanUp(data, druck, sps):
     logging.debug("run:    Data Frame erstellt.")
     
     # Benennung und Speicherung des DataFrame als CSV Datei
-    for i in data:
-
+    for i in range(len(data)):
         df.loc[df.shape[0]] = (data[i].decode()).split(",")
 
     now = datetime.now()
