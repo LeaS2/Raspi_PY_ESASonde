@@ -29,11 +29,11 @@ def run(druck, sps):
 
         # Einlesen der Datenpakete
         data = udpSock.recv(100)                   
-        data_matrix = data_matrix.append(data)
+        data_matrix.append(data)
         #print(data.decode())
  
-    
-    # cleanUp(data_matrix, druck, sps)
+    print(len(data_matrix))
+    cleanUp(data_matrix, druck, sps)
 
 
 def cleanUp(data, druck, sps):
