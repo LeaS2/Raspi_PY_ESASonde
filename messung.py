@@ -11,8 +11,9 @@ BUTTON_PORT = 16
 ETHERNET_PORT = 7
 RASPI_IP = "192.168.0.5"
 SENSORBOARD_IP = "192.168.0.3"
-COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'Pressure 1', 'Pressure 2', 'Pressure 3', 'Pressure 4', 'Pressure 5']
-RUNTIME = 2            # in Sekunden
+COLUMN_HEADER = ['StartSign', 'Timestamp', 'Counter', 'P_kal 1', 'P_kal 2', 'P_kal 3', 'P_kal 4', 'P_kal 5',
+                 'P_raw 1', 'P_raw 2', 'P_raw 3', 'P_raw 4', 'P_raw 5', 'T_raw 1', 'T_raw 2', 'T_raw 3', 'T_raw 4', 'T_raw 5']
+RUNTIME = 10            # in Sekunden
 
 def run(druck, sps):
 
@@ -46,7 +47,7 @@ def cleanUp(data, druck, sps):
         df.loc[df.shape[0]] = (data[i].decode()).split(",")
 
     now = datetime.now()
-    filename = sps + '_' + druck + now.strftime("_%Y-%m-%d_%H:%M") + ".csv"
+    filename = druck + '_' + sps + now.strftime("_%Y-%m-%d_%H:%M") + ".csv"
     df.to_csv(filename, index=False)
     logging.debug("cleanUp:    CSV Datei gespeichert.")
 
